@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MyScene.qml</file>
+        <file>EdgeMaterial.qml</file>
+        <file>PreprocessRenderTarget.qml</file>
+        <file>light.inc.frag</file>
+        <file>phong.frag</file>
+        <file>phong.vert</file>
+        <file>MainMaterial.qml</file>
+    </qresource>
+</RCC>

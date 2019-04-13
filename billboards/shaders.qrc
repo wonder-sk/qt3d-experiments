@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/shaders">
+        <file>billboards.frag</file>
+        <file>billboards.vert</file>
+        <file>billboards.geom</file>
+    </qresource>
+</RCC>
