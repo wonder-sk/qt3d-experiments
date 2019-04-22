@@ -15,6 +15,9 @@ int main(int argc, char* argv[])
     pos << QVector3D(-1, 2, 8);
     pos << QVector3D(1, 1, 7);
     pos << QVector3D(0, 0, 4);
+    pos << QVector3D(1, 5, 1);
+    pos << QVector3D(-3, 3, 0);
+    pos << QVector3D(2, 2, -2);
 
     InstancedGeometry instGeom;
     instGeom.setPoints(pos);

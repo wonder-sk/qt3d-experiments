@@ -109,6 +109,7 @@ Entity {
     }
 
 
+    // reference sphere (for shading)
     Entity {
         PhongMaterial {
             id: redMat
@@ -123,23 +124,6 @@ Entity {
         }
 
         components: [ redMat, sphereMesh, sphereTransform ]
-    }
-
-    Entity {
-        PhongMaterial {
-            id: grayMat
-            ambient: "gray"
-        }
-        CuboidMesh {
-            id: cubeMesh
-        }
-        Transform {
-            id: cubeTransform
-            translation: Qt.vector3d(2,2,5)
-            scale: 2
-        }
-
-        components: [ grayMat, cubeMesh, cubeTransform ]
     }
 
 }
