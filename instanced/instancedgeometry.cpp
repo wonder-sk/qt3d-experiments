@@ -31,9 +31,6 @@ QMatrix4x4 InstancedGeometry::normalMatrix(QMatrix4x4 mat)
 {
   QMatrix3x3 normalMatrix = mat.normalMatrix();
 
-  qDebug() << "n3";
-  qDebug() << normalMatrix;
-
   // QMatrix3x3 is not supported for passing to shaders, so we pass QMatrix4x4
   float *n = normalMatrix.data();
   QMatrix4x4 normalMatrix4(
@@ -41,9 +38,6 @@ QMatrix4x4 InstancedGeometry::normalMatrix(QMatrix4x4 mat)
     n[1], n[4], n[7], 0,
     n[2], n[5], n[8], 0,
     0, 0, 0, 0 );
-
-  qDebug() << "n4";
-  qDebug() << normalMatrix4;
 
   return normalMatrix4;
 }
