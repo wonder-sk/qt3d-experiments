@@ -19,6 +19,12 @@ Edge detection is done as a post-processing pass of scene rendering. In the firs
 
 ![](qt3d-edge-detection.png)
 
+# Instanced Rendering
+
+Using instancing to render a single geometry at multiple different positions.
+
+![](qt3d-instanced.png)
+
 # Lines
 
 Rendering of lines in 3D space with constant screen space thickness. Supports flat and miter joins.
