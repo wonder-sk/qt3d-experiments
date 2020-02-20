@@ -30,3 +30,9 @@ Using instancing to render a single geometry at multiple different positions.
 Rendering of lines in 3D space with constant screen space thickness. Supports flat and miter joins.
 
 ![](qt3d-lines.png)
+
+# Arrows
+
+Drawing rotated and scaled textures of arrows on a mesh. (The end goal is that arrow angles/magnitudes of arrows would be read from another texture, not just based on world positions.)
+
+![](qt3d-arrows.png)

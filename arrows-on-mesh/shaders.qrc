@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/shaders">
+        <file>arrows.frag</file>
+        <file>arrows.vert</file>
+    </qresource>
+</RCC>
