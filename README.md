@@ -6,6 +6,12 @@ Qt3D framework is a really nice addition to Qt ecosystem, but the documentation 
 
 I have used QML as much as possible to keep the code concise. C++ was only used for bits where QML does not have the necessary bindings (yet?).
 
+## Compiling on Ubuntu
+
+If you are using Ubuntu 18.04 or 20.10, then everything is great and the `qt3d5-dev` package contains all include files you need. But if you are on Ubuntu 18.10, 19.04, 19.10 or 20.04, that package does not contain include files for Qt3DExtras and Qt3DQuickExtras libraries. A workaround is to:
+
+1. download source package for your system version - e.g. from here for 20.04: https://packages.ubuntu.com/source/focal/qt3d-opensource-src and unpack it
+2. add to qmake `.pro` file a line to path to those missing includes, e.g. `INCLUDEPATH += /your/path/qt3d-everywhere-src-5.12.8/include`
 
 # Billboards
 
