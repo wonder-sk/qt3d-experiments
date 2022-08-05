@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MyScene.qml</file>
+        <file>SsaoMaterial.qml</file>
+        <file>PreprocessRenderTarget.qml</file>
+    </qresource>
+</RCC>
