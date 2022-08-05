@@ -16,7 +16,6 @@ Entity {
         RenderSettings {
             id: rendSettings
             activeFrameGraph: RenderSurfaceSelector {
-                //id: surfaceSelector
                 Viewport {
                     normalizedRect: Qt.rect(0,0,1,1)
                     CameraSelector {
@@ -30,7 +29,12 @@ Entity {
                                 layers: [layerQuad]
                                 filterMode: LayerFilter.DiscardAnyMatchingLayers
                                 RenderTargetSelector {
-                                    target: rt
+                                    target: RenderTarget {
+                                        attachments: [
+                                            RenderTargetOutput { attachmentPoint : RenderTargetOutput.Color0; texture: colorTexture },
+                                            RenderTargetOutput { attachmentPoint : RenderTargetOutput.Depth; texture: depthTexture }
+                                        ]
+                                    }
                                 }
                             }
                         }
@@ -50,6 +54,36 @@ Entity {
                 }
             }
 
+        }
+
+        Texture2D {
+            id : colorTexture
+            width : _window.width
+            height : _window.height
+            format : Texture.RGB16F
+            generateMipMaps : false
+            magnificationFilter : Texture.Linear
+            minificationFilter : Texture.Linear
+            wrapMode {
+                x: WrapMode.ClampToEdge
+                y: WrapMode.ClampToEdge
+            }
+        }
+
+        Texture2D {
+            id : depthTexture
+            width : _window.width
+            height : _window.height
+
+            format: Texture.DepthFormat
+
+            generateMipMaps : false
+            magnificationFilter : Texture.Linear
+            minificationFilter : Texture.Linear
+            wrapMode {
+                x: WrapMode.ClampToEdge
+                y: WrapMode.ClampToEdge
+            }
         }
 
         Camera {
@@ -79,14 +113,6 @@ Entity {
 
     FirstPersonCameraController { camera: camera }
 
-    PreprocessRenderTarget {
-        id: rt
-
-        w: _window.width
-        h: _window.height
-    }
-
-
     Layer { id: layerQuad }  // quad used for post-processing
 
     MyScene {
@@ -112,8 +138,8 @@ Entity {
         SsaoMaterial {
             id: ssaoMaterial
 
-            textureColor: rt.textureColor
-            textureDepth: rt.textureDepth
+            textureColor: colorTexture
+            textureDepth: depthTexture
             cameraZNear: camera.nearPlane
             cameraZFar: camera.farPlane
             cameraFov: camera.fieldOfView

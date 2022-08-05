@@ -29,12 +29,23 @@ Material {
         return lst
     }
 
+    // 4x4 array of random rotation vectors
+    function generate_random_texture() {
+        var lst = []
+        for (var i = 0; i < 256; ++i) {
+            var vct = Qt.vector3d(Math.random() /**2-1*/, Math.random() /**2-1*/, 0.0)
+            lst.push(vct)
+        }
+        return lst;
+    }
+
     parameters: [
         Parameter { name: "col"; value: textureColor },
         Parameter { name: "dep"; value: textureDepth },
         Parameter { name: "zNear"; value: cameraZNear },
         Parameter { name: "zFar"; value: cameraZFar },
         Parameter { name: "uKernelOffsets[0]"; value: generate_kernel() },
+        Parameter { name: "uNoiseTexture[0]"; value: generate_random_texture() },
         Parameter { name: "origProjMatrix"; value: cameraProjMatrix },
         Parameter { name: "uTanHalfFov"; value: Math.tan( cameraFov/2 * Math.PI/180) },
         Parameter { name: "uAspectRatio"; value: cameraAr }
@@ -86,6 +97,7 @@ uniform float zNear;
 uniform float zFar;
 
 uniform vec3 uKernelOffsets[64];  // unit sphere with random vectors in it
+uniform vec3 uNoiseTexture[256];  //
 uniform mat4 origProjMatrix;      // perspective projection matrix used for forward rendering
 
 noperspective in vec3 vViewRay;   // ray to far plane
@@ -102,15 +114,25 @@ float depthSampleToDepth(float depthSample)
 }
 
 
+vec3 rotate_x(vec3 vct, float angle)
+{
+  return vec3(vct.x*cos(angle)-vct.y*sin(angle), vct.x*sin(angle)+vct.y*cos(angle), vct.z);
+}
+vec3 rotate_y(vec3 vct, float angle)
+{
+  return vec3(vct.x*cos(angle)+vct.z*sin(angle), vct.y, -vct.x*sin(angle)+vct.z*cos(angle));
+}
+
+
 // based on the code from John Chapman
-float ssao(vec3 originPos, float radius)
+float ssao(vec3 originPos, float radius, vec3 noise)
 {
     float occlusion = 0.0;
     for (int i = 0; i < 64; ++i)
     {
         //	get sample position:
-        vec3 samplePos = uKernelOffsets[i];
-        samplePos = samplePos * radius + originPos;
+        vec3 samplePos = rotate_y(rotate_x(uKernelOffsets[i], noise.x), noise.y);
+        samplePos = samplePos + originPos;
 
         //	project sample position:
         vec4 offset = origProjMatrix * vec4(samplePos, 1.0);
@@ -145,7 +167,10 @@ void main()
 
     vec4 originColor = vec4(texture(col, screenTexCoords).rgb, 1.0);
 
-    float ssao_res = ssao(originPos, 0.5);
+    int a_idx = int(gl_FragCoord.x) % 16 + 16 * (int(gl_FragCoord.y) % 16);
+    vec3 noise = uNoiseTexture[a_idx] * 2*3.14;
+
+    float ssao_res = ssao(originPos, 0.5, noise);
     fragColor = originColor * pow(ssao_res, 1.0);
 
     // more debugging
