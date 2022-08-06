@@ -32,7 +32,7 @@ Material {
     // 4x4 array of random rotation vectors
     function generate_random_texture() {
         var lst = []
-        for (var i = 0; i < 256; ++i) {
+        for (var i = 0; i < 16; ++i) {
             var vct = Qt.vector3d(Math.random() /**2-1*/, Math.random() /**2-1*/, 0.0)
             lst.push(vct)
         }
@@ -167,7 +167,7 @@ void main()
 
     vec4 originColor = vec4(texture(col, screenTexCoords).rgb, 1.0);
 
-    int a_idx = int(gl_FragCoord.x) % 16 + 16 * (int(gl_FragCoord.y) % 16);
+    int a_idx = int(gl_FragCoord.x) % 4 + 4 * (int(gl_FragCoord.y) % 4);
     vec3 noise = uNoiseTexture[a_idx] * 2*3.14;
 
     float ssao_res = ssao(originPos, 0.5, noise);

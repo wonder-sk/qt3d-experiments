@@ -26,7 +26,7 @@ Entity {
                             buffers: ClearBuffers.ColorDepthBuffer
                             clearColor: Qt.rgba(0.3,0.3,0.3,1)
                             LayerFilter {
-                                layers: [layerSsao, layerFinal]
+                                layers: [layerSsao, layerSsaoBlur, layerFinal]
                                 filterMode: LayerFilter.DiscardAnyMatchingLayers
                                 RenderTargetSelector {
                                     target: RenderTarget {
@@ -52,6 +52,25 @@ Entity {
                                     target: RenderTarget {
                                         attachments: [
                                             RenderTargetOutput { attachmentPoint : RenderTargetOutput.Color0; texture: ssaoTexture }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // SSAO blur pass - blurs SSAO results to remove noise
+                    CameraSelector {
+                        camera: ortoCamera
+                        RenderStateSet {
+                            // disable depth tests (no need to clear buffers)
+                            renderStates: [ DepthTest { depthFunction: DepthTest.Always } ]
+                            LayerFilter {
+                                layers: [layerSsaoBlur]
+                                RenderTargetSelector {
+                                    target: RenderTarget {
+                                        attachments: [
+                                            RenderTargetOutput { attachmentPoint : RenderTargetOutput.Color0; texture: ssaoBlurTexture }
                                         ]
                                     }
                                 }
@@ -120,6 +139,20 @@ Entity {
             }
         }
 
+        Texture2D {
+            id : ssaoBlurTexture
+            width : _window.width
+            height : _window.height
+            format : Texture.R16F
+            generateMipMaps : false
+            magnificationFilter : Texture.Linear
+            minificationFilter : Texture.Linear
+            wrapMode {
+                x: WrapMode.ClampToEdge
+                y: WrapMode.ClampToEdge
+            }
+        }
+
         Camera {
             id: ortoCamera
             projectionType: CameraLens.OrthographicProjection
@@ -148,6 +181,7 @@ Entity {
     FirstPersonCameraController { camera: camera }
 
     Layer { id: layerSsao }  // quad used for SSAO
+    Layer { id: layerSsaoBlur }  // quad used for SSAO blur
     Layer { id: layerFinal }  // quad used for post-processing
 
     MyScene {
@@ -186,6 +220,27 @@ Entity {
 
     /////
 
+
+    Entity {
+        PlaneMesh {
+            id: ssaoQuadBlurMesh
+            width: 1
+            height: 1
+        }
+        Transform {
+            id: ssaoQuadBlurTransform
+            translation: Qt.vector3d(0, 2, 0)
+        }
+        SsaoBlurMaterial {
+            id: ssaoBlurMaterial
+
+            textureSsao: ssaoTexture
+        }
+
+        components: [ ssaoQuadBlurMesh, ssaoBlurMaterial, ssaoQuadBlurTransform, layerSsaoBlur ]
+    }
+    /////
+
     Entity {
         PlaneMesh {
             id: finalQuadMesh
@@ -200,7 +255,7 @@ Entity {
             id: finalMaterial
 
             textureColor: colorTexture
-            textureSsao: ssaoTexture
+            textureSsao: ssaoBlurTexture
         }
 
         components: [ finalQuadMesh, finalMaterial, finalQuadTransform, layerFinal ]
