@@ -18,15 +18,15 @@ Entity {
             activeFrameGraph: RenderSurfaceSelector {
                 Viewport {
                     normalizedRect: Qt.rect(0,0,1,1)
+
+                    // "ordinary" pass to render scene with shading to a color+depth texture
                     CameraSelector {
                         camera: camera
-
-                        // "ordinary" pass to render scene with shading to a color+depth texture
                         ClearBuffers {
                             buffers: ClearBuffers.ColorDepthBuffer
                             clearColor: Qt.rgba(0.3,0.3,0.3,1)
                             LayerFilter {
-                                layers: [layerQuad]
+                                layers: [layerSsao, layerFinal]
                                 filterMode: LayerFilter.DiscardAnyMatchingLayers
                                 RenderTargetSelector {
                                     target: RenderTarget {
@@ -38,19 +38,39 @@ Entity {
                                 }
                             }
                         }
+                    }
 
-                        // second pass - renders a quad using input from color + depth buffer
-                        CameraSelector {
-                            camera: ortoCamera
+                    // SSAO pass - using depth to produce SSAO texture
+                    CameraSelector {
+                        camera: ortoCamera
+                        RenderStateSet {
+                            // disable depth tests (no need to clear buffers)
+                            renderStates: [ DepthTest { depthFunction: DepthTest.Always } ]
                             LayerFilter {
-                                layers: [layerQuad]
-                                    ClearBuffers {
-                                        buffers: ClearBuffers.ColorDepthBuffer
-                                        //clearColor: Qt.rgba(0.8,0.0,0.0,1)
+                                layers: [layerSsao]
+                                RenderTargetSelector {
+                                    target: RenderTarget {
+                                        attachments: [
+                                            RenderTargetOutput { attachmentPoint : RenderTargetOutput.Color0; texture: ssaoTexture }
+                                        ]
                                     }
+                                }
                             }
                         }
                     }
+
+                    // final pass - combine color texture and SSAO to the final result
+                    CameraSelector {
+                        camera: ortoCamera
+                        RenderStateSet {
+                            // disable depth tests (no need to clear buffers)
+                            renderStates: [ DepthTest { depthFunction: DepthTest.Always } ]
+                            LayerFilter {
+                                layers: [layerFinal]
+                            }
+                        }
+                    }
+
                 }
             }
 
@@ -77,6 +97,20 @@ Entity {
 
             format: Texture.DepthFormat
 
+            generateMipMaps : false
+            magnificationFilter : Texture.Linear
+            minificationFilter : Texture.Linear
+            wrapMode {
+                x: WrapMode.ClampToEdge
+                y: WrapMode.ClampToEdge
+            }
+        }
+
+        Texture2D {
+            id : ssaoTexture
+            width : _window.width
+            height : _window.height
+            format : Texture.R16F
             generateMipMaps : false
             magnificationFilter : Texture.Linear
             minificationFilter : Texture.Linear
@@ -113,7 +147,8 @@ Entity {
 
     FirstPersonCameraController { camera: camera }
 
-    Layer { id: layerQuad }  // quad used for post-processing
+    Layer { id: layerSsao }  // quad used for SSAO
+    Layer { id: layerFinal }  // quad used for post-processing
 
     MyScene {
         id: sceneRoot
@@ -126,15 +161,14 @@ Entity {
 
     Entity {
         PlaneMesh {
-            id: ortoMesh
+            id: ssaoQuadMesh
             width: 1
             height: 1
         }
         Transform {
-            id: ortoTr
+            id: ssaoQuadTransform
             translation: Qt.vector3d(0, 2, 0)
         }
-        // this material uses normal/depth textures and builds edges
         SsaoMaterial {
             id: ssaoMaterial
 
@@ -147,7 +181,29 @@ Entity {
             cameraProjMatrix: camera.projectionMatrix
         }
 
-        components: [ ortoMesh, ssaoMaterial, ortoTr, layerQuad ]
+        components: [ ssaoQuadMesh, ssaoMaterial, ssaoQuadTransform, layerSsao ]
+    }
+
+    /////
+
+    Entity {
+        PlaneMesh {
+            id: finalQuadMesh
+            width: 1
+            height: 1
+        }
+        Transform {
+            id: finalQuadTransform
+            translation: Qt.vector3d(0, 2, 0)
+        }
+        FinalMaterial {
+            id: finalMaterial
+
+            textureColor: colorTexture
+            textureSsao: ssaoTexture
+        }
+
+        components: [ finalQuadMesh, finalMaterial, finalQuadTransform, layerFinal ]
     }
 
 

@@ -171,12 +171,12 @@ void main()
     vec3 noise = uNoiseTexture[a_idx] * 2*3.14;
 
     float ssao_res = ssao(originPos, 0.5, noise);
-    fragColor = originColor * pow(ssao_res, 1.0);
+    //fragColor = originColor * pow(ssao_res, 1.0);
 
     // more debugging
     //fragColor = vec4(vec3(originDepth/100),1.0);
     //fragColor = vec4(originPos.x, originPos.y, 0.0, 1.0);
-    //fragColor = vec4(pow(ssao_res, 1.0));
+    fragColor = vec4(pow(ssao_res, 1.0));
 }
 "
 

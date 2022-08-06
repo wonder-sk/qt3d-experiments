@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>MyScene.qml</file>
         <file>SsaoMaterial.qml</file>
+        <file>FinalMaterial.qml</file>
     </qresource>
 </RCC>
