@@ -58,6 +58,11 @@ when zoomed in). The idea is that we make sure to do model-view-projection (MVP)
 matrix calculation in double precision, and only then convert it to single
 precision floats that will be used on the GPU.
 
+| Using double precision | Using single precision (without RTC) |
+|------|-----|
+| <video src="https://github.com/user-attachments/assets/06142879-518e-483f-9c17-d7d05859db13"></video> | <video src="https://github.com/user-attachments/assets/4461deeb-b3fc-437f-8018-610751ae951f"></video> |
+
+
 # Logarithmic Depth
 
 This code demonstrates logarithmic depth buffer rendering technique.
@@ -66,3 +71,9 @@ large depth range (e.g. when creating a virtual globe). The idea is
 that the fragment shader sets depth of fragments to make a better
 use of the range [0..1] instead of keeping the depth value that came
 out from the projection matrix.
+
+| Using logarithmic depth | Without logarithmic depth |
+|------|-----|
+| <video src="https://github.com/user-attachments/assets/8b3441ad-705a-4e8f-adaf-a71d6337fa2f"></video> | <video src="https://github.com/user-attachments/assets/a547b04e-97da-4c3a-98f1-6163480a48ce"></video> |
+
+
