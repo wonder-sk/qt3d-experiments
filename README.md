@@ -57,3 +57,12 @@ globe) without getting numerical issues (which would make objects jump around
 when zoomed in). The idea is that we make sure to do model-view-projection (MVP)
 matrix calculation in double precision, and only then convert it to single
 precision floats that will be used on the GPU.
+
+# Logarithmic Depth
+
+This code demonstrates logarithmic depth buffer rendering technique.
+It is a way to increase the precision of the depth buffer when using
+large depth range (e.g. when creating a virtual globe). The idea is
+that the fragment shader sets depth of fragments to make a better
+use of the range [0..1] instead of keeping the depth value that came
+out from the projection matrix.
