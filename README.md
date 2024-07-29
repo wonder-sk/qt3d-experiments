@@ -48,3 +48,12 @@ Rendering of lines in 3D space with constant screen space thickness. Supports fl
 Drawing rotated and scaled textures of arrows on a mesh. (The end goal is that arrow angles/magnitudes of arrows would be read from another texture, not just based on world positions.)
 
 ![](qt3d-arrows.png)
+
+# Relative-to-center Rendering
+
+This code demonstrates the "relative to center" rendering technique with Qt3D.
+It is useful when working with large coordinates (e.g. when creating a virtual
+globe) without getting numerical issues (which would make objects jump around
+when zoomed in). The idea is that we make sure to do model-view-projection (MVP)
+matrix calculation in double precision, and only then convert it to single
+precision floats that will be used on the GPU.
