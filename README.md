@@ -19,6 +19,15 @@ Demonstrates billboards rendering technique - quads with constant screen size th
 
 ![](qt3d-billboards.png)
 
+# Multisample Anti-aliasing (MSAA)
+
+Shows how to turn on multisample anti-aliasing with Qt3D. We create a render target with multisample textures, render to it (with render state including `MultiSampleAntiAliasing`), and then "resolve" multisample textures with `BlitFramebuffer` framegraph node. Learn more about MSAA in [LearnOpenGL tutorial](https://learnopengl.com/Advanced-OpenGL/Anti-Aliasing).
+
+| Anti-aliasing OFF | Anti-aliasing ON |
+|------|-----|
+| ![](msaa-off.png) | ![](msaa-on.png) |
+
+
 # Screen Space Ambient Occlusion (SSAO)
 
 Implementation of SSAO that is based on [John Chapman's tutorial](http://john-chapman-graphics.blogspot.com/2013/01/ssao-tutorial.html) and [LearnOpenGL tutorial](https://learnopengl.com/Advanced-Lighting/SSAO). It only uses depth buffer as the input and samples from full sphere. The tutorials also use normals (for each pixel) and therefore only use a hemisphere for sampling. But I needed this for rendering where point clouds (with no normal vectors) are used, so I went for this variant (probably lower quality).
