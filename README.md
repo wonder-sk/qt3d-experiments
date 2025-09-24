@@ -52,6 +52,12 @@ Rendering of lines in 3D space with constant screen space thickness. Supports fl
 
 ![](qt3d-lines.png)
 
+# Silhouettes with Stencil Buffer
+
+Render silhouette of object(s) by drawing a scaled-up version of the same geometry and stencil buffer to avoid overpainting the highlighted object itself. Based on the [LearnOpenGL stencil testing tutorial](https://learnopengl.com/Advanced-OpenGL/Stencil-testing).
+
+![](qt3d-silhouette-stencil.png)
+
 # Arrows
 
 Drawing rotated and scaled textures of arrows on a mesh. (The end goal is that arrow angles/magnitudes of arrows would be read from another texture, not just based on world positions.)
