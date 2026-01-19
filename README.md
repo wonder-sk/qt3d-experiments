@@ -58,6 +58,12 @@ Render silhouette of object(s) by drawing a scaled-up version of the same geomet
 
 ![](qt3d-silhouette-stencil.png)
 
+# 3D Gaussian Splatting
+
+A prototype to do 3D Gaussian splatting rendering. It is pretty basic and requires some optimizations and fixes. It loads a PLY file given on the command line. Sorting of splats happens on the CPU.
+
+![](qt3d-3gds.png)
+
 # Arrows
 
 Drawing rotated and scaled textures of arrows on a mesh. (The end goal is that arrow angles/magnitudes of arrows would be read from another texture, not just based on world positions.)
