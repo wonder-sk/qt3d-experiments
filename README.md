@@ -62,7 +62,7 @@ Render silhouette of object(s) by drawing a scaled-up version of the same geomet
 
 A prototype to do 3D Gaussian splatting rendering. It is pretty basic and requires some optimizations and fixes. It loads a PLY file given on the command line. Sorting of splats happens on the CPU.
 
-![](qt3d-3gds.png)
+![](qt3d-3dgs.png)
 
 # Arrows
 
